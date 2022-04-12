@@ -6,6 +6,7 @@ import store from "./store";
 
 Vue.config.productionTip = false;
 Vue.use(Vuelidate);
+Vue.prototype.$eventHub = new Vue();
 
 new Vue({
   router,

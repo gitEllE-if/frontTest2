@@ -1,7 +1,7 @@
 <template>
   <main class="products-list">
     <ProductItem
-      v-for="product in products"
+      v-for="product in productsList"
       :key="product.id"
       :item="product"
       @delete="deleteItem"
@@ -10,15 +10,30 @@
 </template>
 
 <script>
-import ProductItem from "@/components/ProductItem.vue";
 import { mapState } from "vuex";
+import ProductItem from "@/components/ProductItem.vue";
+import { SORTER } from "@/utils/sortHelper.js";
 export default {
   name: "ItemsList",
   components: { ProductItem },
+  data() {
+    return {
+      sortedProducts: null,
+    };
+  },
   computed: {
     ...mapState({
       products: (state) => state.products,
     }),
+    productsList: function () {
+      return this.sortedProducts ? this.sortedProducts : this.products;
+    },
+  },
+  mounted() {
+    this.$eventHub.$on("sort", this.sortItems);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off("sort", this.sortItems);
   },
   methods: {
     deleteItem(id) {
@@ -26,6 +41,12 @@ export default {
       if (idx !== -1) {
         this.$store.dispatch("delItem", { id });
       }
+    },
+    sortItems(comparator) {
+      if (comparator === "default") {
+        this.sortedProducts = this.products;
+      }
+      this.sortedProducts = [...this.products].sort(SORTER[comparator]);
     },
   },
 };
