@@ -70,11 +70,11 @@
       </label>
       <input
         class="item-add__input"
-        type="number"
+        type="text"
         min="0"
         id="itemPrice"
         placeholder="Введите цену"
-        v-model.number="$v.price.$model"
+        v-model.trim="$v.price.$model"
       />
       <div
         class="item-add__error-txt"
@@ -91,7 +91,7 @@
       </div>
       <div
         class="item-add__error-txt"
-        v-if="$v.price.$dirty && !$v.price.numeric"
+        v-if="$v.price.$dirty && !$v.price.decimal"
       >
         Значение должно быть числом
       </div>
@@ -114,7 +114,7 @@ import {
   minLength,
   maxLength,
   url,
-  numeric,
+  decimal,
   between,
 } from "vuelidate/lib/validators";
 export default {
@@ -140,8 +140,8 @@ export default {
     },
     price: {
       required,
-      numeric,
-      between: between(1, 9999999),
+      decimal,
+      between: between(0.1, 9999999),
     },
   },
   methods: {
@@ -151,7 +151,8 @@ export default {
           name: this.name,
           description: this.description,
           img: this.img,
-          price: this.price,
+          price: parseFloat(this.price),
+          currency: "руб.",
         };
         this.$store.dispatch("addItem", { newItem });
         this.isSubmit = true;

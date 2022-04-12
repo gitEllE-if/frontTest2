@@ -3,7 +3,7 @@
     <div class="page-top">
       <h1 class="g-title__h1 page-top__h1">Добавление товара</h1>
       <select class="page-top__select" v-model="sorter">
-        <option value="default">По умолчанию</option>
+        <option value="null">По умолчанию</option>
         <option value="ascendingPrice">По возрастанию цены</option>
         <option value="descendingPrice">По убыванию цены</option>
         <option value="ascendingName">По наименованию</option>
@@ -28,7 +28,7 @@ export default {
   },
   data: () => {
     return {
-      sorter: "default",
+      sorter: null,
     };
   },
   created() {
@@ -36,7 +36,7 @@ export default {
   },
   watch: {
     sorter: function () {
-      this.$eventHub.$emit("sort", this.sorter);
+      this.$store.dispatch("setSorting", { sorting: this.sorter });
     },
   },
 };
