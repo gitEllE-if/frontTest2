@@ -11,7 +11,9 @@ export default new Vuex.Store({
   state: {
     products: [],
   },
-  getters: {},
+  getters: {
+    getProductsAmount: (state) => state.products.length,
+  },
   mutations: {
     setProducts(state, newProducts) {
       state.products = newProducts;
@@ -39,6 +41,15 @@ export default new Vuex.Store({
     },
     delItem({ commit }, payload) {
       commit("delProductsItem", payload.id);
+    },
+    addItem({ commit }, payload) {
+      const newItem = {
+        ...payload.newItem,
+        id: this.state.products.length
+          ? this.state.products[this.state.products.length - 1].id + 1
+          : 1,
+      };
+      commit("addProductsItem", newItem);
     },
   },
   modules: {},

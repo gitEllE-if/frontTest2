@@ -53,5 +53,14 @@
     background: #eeeeee;
     box-shadow: initial;
   }
+  &__animation {
+    animation: pulse 1s;
+    box-shadow: 0 0 0 2em rgba(#fff, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 adjust-hue(#7bae73, 45deg);
+  }
 }
 </style>
