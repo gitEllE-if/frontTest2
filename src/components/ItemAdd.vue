@@ -1,6 +1,6 @@
 <template>
   <form class="item-add__form" action="#">
-    <div class="item-add">
+    <div class="item-add" :class="{ 'item-add__error': $v.name.$error }">
       <label class="item-add__label item-add__label__required" for="itemName"
         >Наименование товара
       </label>
@@ -9,8 +9,26 @@
         type="text"
         id="itemName"
         placeholder="Введите наименование товара"
-        required
+        v-model.trim="$v.name.$model"
       />
+      <div
+        class="item-add__error-txt"
+        v-if="$v.name.$dirty && !$v.name.required"
+      >
+        Поле является обязательным
+      </div>
+      <div
+        class="item-add__error-txt"
+        v-if="$v.name.$dirty && !$v.name.minLength"
+      >
+        Минимальное количество символов: {{ $v.name.$params.minLength.min }}
+      </div>
+      <div
+        class="item-add__error-txt"
+        v-if="$v.name.$dirty && !$v.name.maxLength"
+      >
+        Максимальное количество символов: {{ $v.name.$params.maxLength.max }}
+      </div>
     </div>
 
     <div class="item-add">
@@ -26,7 +44,7 @@
       </textarea>
     </div>
 
-    <div class="item-add">
+    <div class="item-add" :class="{ 'item-add__error': $v.img.$error }">
       <label class="item-add__label item-add__label__required" for="itemImg"
         >Ссылка на изображение товара
       </label>
@@ -35,11 +53,17 @@
         type="text"
         id="itemImg"
         placeholder="Введите ссылку"
-        required
+        v-model.trim="$v.img.$model"
       />
+      <div class="item-add__error-txt" v-if="$v.img.$dirty && !$v.img.required">
+        Поле является обязательным
+      </div>
+      <div class="item-add__error-txt" v-if="$v.img.$dirty && !$v.img.url">
+        Неверная ссылка
+      </div>
     </div>
 
-    <div class="item-add">
+    <div class="item-add" :class="{ 'item-add__error': $v.price.$error }">
       <label class="item-add__label item-add__label__required" for="itemPrice"
         >Цена товара
       </label>
@@ -49,19 +73,73 @@
         min="0"
         id="itemPrice"
         placeholder="Введите цену"
-        required
+        v-model.number="$v.price.$model"
       />
+      <div
+        class="item-add__error-txt"
+        v-if="$v.price.$dirty && !$v.price.required"
+      >
+        Поле является обязательным
+      </div>
+      <div
+        class="item-add__error-txt"
+        v-if="$v.price.$dirty && !$v.price.between"
+      >
+        Значение должно быть от {{ $v.price.$params.between.min }} до
+        {{ $v.price.$params.between.max }}
+      </div>
+      <div
+        class="item-add__error-txt"
+        v-if="$v.price.$dirty && !$v.price.numeric"
+      >
+        Значение должно быть числом
+      </div>
     </div>
 
-    <button class="g-button item-add__button" type="submit">
+    <button
+      class="g-button item-add__button"
+      type="submit"
+      :disabled="$v.$invalid"
+    >
       Добавить товар
     </button>
   </form>
 </template>
 
 <script>
+import {
+  required,
+  minLength,
+  maxLength,
+  url,
+  numeric,
+  between,
+} from "vuelidate/lib/validators";
 export default {
   name: "ItemAdd",
+  data() {
+    return {
+      name: "",
+      img: "",
+      price: null,
+    };
+  },
+  validations: {
+    name: {
+      required,
+      minLength: minLength(2),
+      maxLength: maxLength(64),
+    },
+    img: {
+      required,
+      url,
+    },
+    price: {
+      required,
+      numeric,
+      between: between(1, 9999999),
+    },
+  },
 };
 </script>
 
@@ -78,6 +156,7 @@ export default {
   margin-right: 16px;
 }
 .item-add {
+  position: relative;
   display: flex;
   flex-direction: column;
   &:not(:first-child) {
@@ -107,7 +186,7 @@ export default {
   &__input {
     height: 36px;
     outline: none;
-    border: none;
+    border: 1px solid #fffefb;
     padding: 10px 16px;
     background: #fffefb;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -139,7 +218,24 @@ export default {
     height: 36px;
   }
 }
-
+.item-add__error {
+  & label {
+    color: #ff8484;
+  }
+  & input {
+    border: 1px solid #ff8484;
+  }
+}
+.item-add__error-txt {
+  position: absolute;
+  bottom: -10px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 10px;
+  letter-spacing: -0.02em;
+  color: #ff8484;
+}
 @media (max-width: 760px) {
   .item-add__form {
     margin-bottom: 24px;
