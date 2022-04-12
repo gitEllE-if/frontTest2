@@ -2,11 +2,11 @@
   <div class="container">
     <div class="page-top">
       <h1 class="g-title__h1 page-top__h1">Добавление товара</h1>
-      <select class="page-top__select">
-        <option value="default">По умолчанию</option>
-        <option value="priceInc">По возрастанию цены</option>
-        <option value="priceDec">По убыванию цены</option>
-        <option value="alpha">По наименованию</option>
+      <select class="page-top__select" v-model="sorter">
+        <option value="null">По умолчанию</option>
+        <option value="ascendingPrice">По возрастанию цены</option>
+        <option value="descendingPrice">По убыванию цены</option>
+        <option value="ascendingName">По наименованию</option>
       </select>
     </div>
     <div class="page-content">
@@ -26,8 +26,18 @@ export default {
     ItemsList,
     ItemAdd,
   },
+  data: () => {
+    return {
+      sorter: null,
+    };
+  },
   created() {
     this.$store.dispatch("loadProducts");
+  },
+  watch: {
+    sorter: function () {
+      this.$store.dispatch("setSorting", { sorting: this.sorter });
+    },
   },
 };
 </script>

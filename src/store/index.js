@@ -10,8 +10,11 @@ const URL_PRODUCTS =
 export default new Vuex.Store({
   state: {
     products: [],
+    sorting: null,
   },
-  getters: {},
+  getters: {
+    getProductsAmount: (state) => state.products.length,
+  },
   mutations: {
     setProducts(state, newProducts) {
       state.products = newProducts;
@@ -24,6 +27,9 @@ export default new Vuex.Store({
       if (idx !== -1) {
         state.products.splice(idx, 1);
       }
+    },
+    setProductsSorting(state, newSorting) {
+      state.sorting = newSorting;
     },
   },
   actions: {
@@ -39,6 +45,18 @@ export default new Vuex.Store({
     },
     delItem({ commit }, payload) {
       commit("delProductsItem", payload.id);
+    },
+    addItem({ commit }, payload) {
+      const newItem = {
+        ...payload.newItem,
+        id: this.state.products.length
+          ? this.state.products[this.state.products.length - 1].id + 1
+          : 1,
+      };
+      commit("addProductsItem", newItem);
+    },
+    setSorting({ commit }, payload) {
+      commit("setProductsSorting", payload.sorting);
     },
   },
   modules: {},

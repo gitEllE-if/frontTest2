@@ -1,5 +1,5 @@
 <template>
-  <form class="item-add__form" action="#">
+  <form class="item-add__form" action="#" @submit.prevent="addItem">
     <div class="item-add" :class="{ 'item-add__error': $v.name.$error }">
       <label class="item-add__label item-add__label__required" for="itemName"
         >Наименование товара
@@ -40,6 +40,7 @@
         id="itemDescription"
         placeholder="Введите описание товара"
         rows="4"
+        v-model="description"
       >
       </textarea>
     </div>
@@ -69,11 +70,11 @@
       </label>
       <input
         class="item-add__input"
-        type="number"
+        type="text"
         min="0"
         id="itemPrice"
         placeholder="Введите цену"
-        v-model.number="$v.price.$model"
+        v-model.trim="$v.price.$model"
       />
       <div
         class="item-add__error-txt"
@@ -90,7 +91,7 @@
       </div>
       <div
         class="item-add__error-txt"
-        v-if="$v.price.$dirty && !$v.price.numeric"
+        v-if="$v.price.$dirty && !$v.price.decimal"
       >
         Значение должно быть числом
       </div>
@@ -98,6 +99,7 @@
 
     <button
       class="g-button item-add__button"
+      :class="{ 'g-button__animation': isSubmit }"
       type="submit"
       :disabled="$v.$invalid"
     >
@@ -112,7 +114,7 @@ import {
   minLength,
   maxLength,
   url,
-  numeric,
+  decimal,
   between,
 } from "vuelidate/lib/validators";
 export default {
@@ -120,8 +122,10 @@ export default {
   data() {
     return {
       name: "",
+      description: "",
       img: "",
       price: null,
+      isSubmit: false,
     };
   },
   validations: {
@@ -136,8 +140,24 @@ export default {
     },
     price: {
       required,
-      numeric,
-      between: between(1, 9999999),
+      decimal,
+      between: between(0.1, 9999999),
+    },
+  },
+  methods: {
+    addItem() {
+      if (!this.$v.$invalid) {
+        const newItem = {
+          name: this.name,
+          description: this.description,
+          img: this.img,
+          price: parseFloat(this.price),
+          currency: "руб.",
+        };
+        this.$store.dispatch("addItem", { newItem });
+        this.isSubmit = true;
+        setTimeout(() => (this.isSubmit = false), 1000);
+      }
     },
   },
 };
@@ -196,7 +216,10 @@ export default {
     font-weight: 400;
     font-size: 12px;
     line-height: 15px;
-    color: #b4b4b4;
+    color: #3f3f3f;
+    &::placeholder {
+      color: #b4b4b4;
+    }
   }
   &__textarea {
     outline: none;
@@ -211,7 +234,10 @@ export default {
     font-weight: 400;
     font-size: 12px;
     line-height: 15px;
-    color: #b4b4b4;
+    color: #3f3f3f;
+    &::placeholder {
+      color: #b4b4b4;
+    }
   }
   &__button {
     margin-top: 24px;
@@ -224,8 +250,33 @@ export default {
   }
   & input {
     border: 1px solid #ff8484;
+    animation: shake 0.6s cubic-bezier(0.36, 0.09, 0.19, 0.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 }
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
 .item-add__error-txt {
   position: absolute;
   bottom: -10px;

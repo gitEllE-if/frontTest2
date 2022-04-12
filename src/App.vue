@@ -11,6 +11,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgba(255, 254, 251, 0.8);
+  font-display: swap;
 }
 * {
   padding: 0;
@@ -52,6 +53,15 @@
     color: #b4b4b4;
     background: #eeeeee;
     box-shadow: initial;
+  }
+  &__animation {
+    animation: pulse 1s;
+    box-shadow: 0 0 0 2em rgba(#fff, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 adjust-hue(#7bae73, 45deg);
   }
 }
 </style>
