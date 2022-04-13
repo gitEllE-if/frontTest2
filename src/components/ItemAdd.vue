@@ -183,7 +183,7 @@ export default {
     margin-top: 16px;
   }
   &__label {
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: inherit;
     font-style: normal;
     font-weight: 400;
     font-size: 10px;
@@ -211,7 +211,7 @@ export default {
     background: #fffefb;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: inherit;
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -229,7 +229,7 @@ export default {
     background: #fffefb;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: inherit;
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -291,6 +291,11 @@ export default {
   .item-add__form {
     margin-bottom: 24px;
     margin-right: initial;
+  }
+}
+@media (max-width: 420px) {
+  .item-add__form {
+    min-width: 100%;
   }
 }
 </style>

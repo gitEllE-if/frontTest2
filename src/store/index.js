@@ -4,9 +4,6 @@ import { instance as api } from "@/request";
 
 Vue.use(Vuex);
 
-const URL_PRODUCTS =
-  "https://raw.githubusercontent.com/gitEllE-if/frontTest2/main/products.json";
-
 export default new Vuex.Store({
   state: {
     products: [],
@@ -35,25 +32,41 @@ export default new Vuex.Store({
   actions: {
     async loadProducts({ commit }) {
       try {
-        let res = await api.get(URL_PRODUCTS);
-        if (res?.status == 200 && res.data) {
+        let res = await api.get("/api/catalog/");
+        if (res.data) {
           commit("setProducts", res.data);
         }
       } catch (err) {
-        console.warn("FAIL - load products: " + err);
+        console.error("FAIL: get products list => " + err);
       }
     },
-    delItem({ commit }, payload) {
-      commit("delProductsItem", payload.id);
+    async delItem({ commit }, payload) {
+      try {
+        let res = await api.delete("/api/catalog/" + payload.id);
+        const { success } = res.data;
+        if (success) {
+          commit("delProductsItem", payload.id);
+        }
+      } catch (err) {
+        console.error("FAIL: del from catalog => " + err);
+      }
     },
-    addItem({ commit }, payload) {
+    async addItem({ commit }, payload) {
       const newItem = {
         ...payload.newItem,
         id: this.state.products.length
           ? this.state.products[this.state.products.length - 1].id + 1
           : 1,
       };
-      commit("addProductsItem", newItem);
+      try {
+        let res = await api.post("/api/catalog/", newItem);
+        const { success } = res.data;
+        if (success) {
+          commit("addProductsItem", newItem);
+        }
+      } catch (err) {
+        console.error("FAIL: add to catalog => " + err);
+      }
     },
     setSorting({ commit }, payload) {
       commit("setProductsSorting", payload.sorting);

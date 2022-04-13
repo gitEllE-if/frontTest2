@@ -68,7 +68,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: "Source Sans Pro", serif;
+    font-family: inherit;
     font-style: normal;
     color: #3f3f3f;
     &-text {
@@ -121,6 +121,18 @@ export default {
 @media (max-width: 1439px) {
   .card {
     margin: 0 16px 16px;
+  }
+}
+@media (max-width: 420px) {
+  .card {
+    width: 100%;
+    margin: 0 0 16px;
+    &:not(:nth-child(3n)) {
+      margin-right: initial;
+    }
+    &__img {
+      width: 100%;
+    }
   }
 }
 </style>
