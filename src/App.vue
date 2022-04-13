@@ -5,13 +5,32 @@
 </template>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Source+Sans+Pro&display=swap");
+@font-face {
+  font-family: "Source Sans Pro";
+  src: url("~@/assets/fonts/SourceSansPro-Regular.ttf.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Sans Pro";
+  src: url("~@/assets/fonts/SourceSansPro-Semibold.ttf.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("~@/assets/fonts/Inter-SemiBold.ttf");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
 #app {
-  font-family: "Source Sans Pro", serif;
+  font-family: "Source Sans Pro", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgba(255, 254, 251, 0.8);
-  font-display: swap;
 }
 * {
   padding: 0;
@@ -24,7 +43,7 @@
   max-width: 1440px;
 }
 .g-title__h1 {
-  font-family: "Source Sans Pro", serif;
+  font-family: "Source Sans Pro", sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: 28px;
@@ -36,7 +55,7 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-family: "Inter";
+  font-family: "Inter", sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: 12px;
